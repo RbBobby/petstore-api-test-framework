@@ -1,0 +1,39 @@
+# Virtual environment
+venv/
+.env/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Pytest
+.pytest_cache/
+
+# IDE
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+
+# Logs
+*.log
+
+# Test reports
+allure-results/
+allure-report/
+
+# Coverage
+.coverage
+htmlcov/
+
+# Build
+dist/
+build/
+*.egg-info/
+
+# Environment configs
+.env.local
+.env.*.local
