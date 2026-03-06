@@ -1,22 +1,23 @@
-import random
+import pytest
 
 
-def test_create_and_get_pet(pet_api):
+class TestPetApi:
 
-    pet_id = random.randint(10000, 99999)
+    def test_create_and_get_pet(self, pet_api, created_pet):
+        get_response = pet_api.get_pet(created_pet["id"])
 
-    pet_data = {
-        "id": pet_id,
-        "name": "doggie",
-        "status": "available"
-    }
+        assert get_response.status_code == 200
 
-    # create pet
-    create_response = pet_api.create_pet(pet_data)
-    assert create_response.status_code == 200
+        data = get_response.json()
+        assert data["name"] == created_pet["name"]
 
-    # get pet
-    get_response = pet_api.get_pet(pet_id)
 
-    assert get_response.status_code == 200
-    assert get_response.json()["name"] == "doggie"
+    def test_delete_pet(self, pet_api, pet_payload):
+        create_response = pet_api.create_pet(pet_payload)
+        assert create_response.status_code == 200
+
+        delete_response = pet_api.delete_pet(pet_payload["id"])
+        assert delete_response.status_code == 200
+
+        get_response = pet_api.get_pet(pet_payload["id"])
+        assert get_response.status_code == 404

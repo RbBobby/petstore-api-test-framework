@@ -15,5 +15,11 @@ class UserAPI:
             }
         )
 
+    def logout(self):
+        return self.client.get("/user/logout")
+
     def get_user(self, username):
         return self.client.get(f"/user/{username}")
+
+    def delete_user(self, username):
+        return self.client.delete(f"/user/{username}")

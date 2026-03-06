@@ -1,27 +1,28 @@
-import random
+import pytest
 
 
-def test_user_login(user_api):
+class TestUserAuth:
 
-    username = f"user_{random.randint(1000,9999)}"
+    def test_user_login(self, user_api, created_user):
+        response = user_api.login(
+            created_user["username"],
+            created_user["password"]
+        )
 
-    user_data = {
-        "id": 0,
-        "username": username,
-        "firstName": "Alex",
-        "lastName": "QA",
-        "email": "alex@test.com",
-        "password": "12345",
-        "phone": "123456789",
-        "userStatus": 1
-    }
+        assert response.status_code == 200
+        assert "logged in user session" in response.text
 
-    # create user
-    create_response = user_api.create_user(user_data)
-    assert create_response.status_code == 200
 
-    # login
-    login_response = user_api.login(username, "12345")
+    def test_get_user_after_create(self, user_api, created_user):
+        response = user_api.get_user(created_user["username"])
 
-    assert login_response.status_code == 200
-    assert "logged in user session" in login_response.text
+        assert response.status_code == 200
+        body = response.json()
+
+        assert body["username"] == created_user["username"]
+
+
+    def test_get_unknown_user(self, user_api):
+        response = user_api.get_user("unknown_user_999999")
+
+        assert response.status_code == 404
